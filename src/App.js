@@ -1,16 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import './App.module.scss';
+import Button from './Components/Button/Button';
+import Container from './Components/Container/Container';
+import Time from "./Components/Time/Time";
+import { useState, useEffect } from 'react';
 
-function App() {
+const App = () => {
+  const [time, setTime] = useState(0);
+  const [timerOn, setTimerOn] = useState(false);
 
-  const [time, setTime] = useState(0)
-  const [start, setStart] = useState (false)
-
+  useEffect(() => {
+    let interval = null;
+    if (timerOn) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 10);
+      }, 10);
+    } else{
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerOn]);
+  
   return (
-    <div className = "App">
-      <h1>Stoper</h1>
-    </div>
+    <Container>
+      <Time time={time} />
+      <Button action={() => setTimerOn(true)}>START</Button>
+      <Button action={() => setTimerOn(false)}>STOP</Button>
+      <Button action={() => setTimerOn(setTime(0))}>RESET</Button>
+    </Container>
   );
-} 
+};
 
 export default App;
